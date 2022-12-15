@@ -1,16 +1,20 @@
-let idTimeOut;
-let validos;
+let idTimeOut, validos, cantidad;
+let totalEnProductos=0, costoTotal=0, precio=0, contador = 0;
 
 let txtNombre = document.getElementById("Name");
 let txtNumber = document.getElementById("Number");
 let total = document.getElementById("precioTotal");
 
 let tabla = document.getElementById("tablaListaCompras")
-let cuerpoTabla = tabla.getElementsByTagName("tbody")
+let cuerpoTabla = tabla.getElementsByTagName("tbody");
 
 let btnAgregar = document.getElementById("btnAgregar");
 let alertValidaciones = document.getElementById("alertValidaciones");
-let alertValidacionesTexto = document.getElementById("alertValidacionesTexto")
+let alertValidacionesTexto = document.getElementById("alertValidacionesTexto");
+let contadorProductos = document.getElementById("contadorProductos");
+let productosTotal = document.getElementById("productosTotal");
+let precioTotal = document.getElementById("precioTotal")
+
 
 function getPrecio(){
     return Math.floor(Math.random()*50*100)/100;
@@ -39,7 +43,7 @@ btnAgregar.addEventListener ("click", function(event){
     clearTimeout(idTimeOut);
     alertValidacionesTexto.innerHTML="";
     if ((!validarNombre()) || (!validarCantidad())){
-        let lista = "<ul>"
+        let lista = "Llena los campos correctamente <ul>"
         if (! validarNombre()){
             txtNombre.style.border = "solid red 1px";
             lista += "<li>Ingresa un nombre válido</li>";
@@ -55,6 +59,30 @@ btnAgregar.addEventListener ("click", function(event){
         idTimeOut = setTimeout(function(){
             alertValidaciones.style.display="none";
         }, 4000);
-    }
+        return false;
+    } //if validaciones
+    txtNumber.style.border="";
+    txtNombre.style.border="";
+    alertValidaciones.style.display="none";
+    contador++;
+    contadorProductos.innerHTML = contador;
+    cantidad = parseFloat(txtNumber.value);
+    totalEnProductos += cantidad;
+    productosTotal.innerHTML = totalEnProductos;
+    precio = getPrecio();
+    costoTotal += precio * cantidad;
+    precioTotal.innerHTML = "$ " + costoTotal.toFixed(2);
+
+    let row = `<tr>
+    <td>${contador}</td>
+    <td>${txtNombre.value}</td>
+    <td>${txtNumber.value}</td>
+    <td>${precio}</td>
+    </tr>`;
+    cuerpoTabla[0].insertAdjacentHTML("beforeend",row);
+    txtNombre.value="";
+    txtNumber.value="";
+    txtNombre.focus();
+
 })
 
